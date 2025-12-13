@@ -11,9 +11,21 @@
     "type-check": "tsc --noEmit",
     "cdk": "cdk",
     "synth": "cdk synth",
+    "synth:dev": "cdk synth -c environment=dev",
+    "synth:stg": "cdk synth -c environment=stg",
+    "synth:prd": "cdk synth -c environment=prd",
     "deploy": "cdk deploy",
+    "deploy:dev": "cdk deploy -c environment=dev",
+    "deploy:stg": "cdk deploy -c environment=stg",
+    "deploy:prd": "cdk deploy -c environment=prd",
     "diff": "cdk diff",
-    "clean": "rm -rf cdk.out *.js *.d.ts lib/**/*.js lib/**/*.d.ts bin/**/*.js bin/**/*.d.ts"
+    "diff:dev": "cdk diff -c environment=dev",
+    "diff:stg": "cdk diff -c environment=stg",
+    "diff:prd": "cdk diff -c environment=prd",
+    "destroy:dev": "cdk destroy -c environment=dev",
+    "destroy:stg": "cdk destroy -c environment=stg",
+    "destroy:prd": "cdk destroy -c environment=prd",
+    "clean": "rm -rf cdk.out *.js *.d.ts lib/**/*.js lib/**/*.d.ts bin/**/*.js bin/**/*.d.ts config/**/*.js config/**/*.d.ts"
   },
   "devDependencies": {
     "@types/node": "^22.7.9",

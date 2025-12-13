@@ -10,6 +10,8 @@ export interface ApiGatewayConstructProps {
   apiHandler: lambda.Function;
   userPool: cognito.UserPool;
   userPoolClient: cognito.UserPoolClient;
+  apiName: string;
+  allowedOrigins: string[];
 }
 
 export class ApiGatewayConstruct extends Construct {
@@ -33,7 +35,7 @@ export class ApiGatewayConstruct extends Construct {
     );
 
     this.httpApi = new apigatewayv2.HttpApi(this, 'VyluneApi', {
-      apiName: 'vylune-api',
+      apiName: props.apiName,
       description: 'Vylune Inventory Management API',
       corsPreflight: {
         allowHeaders: ['Content-Type', 'Authorization'],
@@ -44,7 +46,7 @@ export class ApiGatewayConstruct extends Construct {
           apigatewayv2.CorsHttpMethod.DELETE,
           apigatewayv2.CorsHttpMethod.OPTIONS,
         ],
-        allowOrigins: ['http://localhost:3000'],
+        allowOrigins: props.allowedOrigins,
         allowCredentials: true,
       },
     });
