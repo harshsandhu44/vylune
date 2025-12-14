@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { initTRPC } from '@trpc/server';
+import { randomUUID } from 'crypto';
 import type { Context } from '../context';
 import { CreateStockMovementSchema } from '@vylune/core/schemas';
 
@@ -26,9 +27,10 @@ export const stockRouter = t.router({
   create: t.procedure.input(CreateStockMovementSchema).mutation(async ({ ctx, input }) => {
     const now = new Date().toISOString();
     const movement = await ctx.models.StockMovement.create({
+      id: randomUUID(),
       ...input,
       createdAt: now,
-    });
+    } as any);
 
     const product = await ctx.models.Product.get({ id: input.productId });
     if (product) {
@@ -46,7 +48,7 @@ export const stockRouter = t.router({
         id: input.productId,
         quantity: Math.max(0, newQuantity),
         updatedAt: now,
-      });
+      } as any);
     }
 
     return movement;

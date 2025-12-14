@@ -1,11 +1,8 @@
 import { z } from 'zod';
 import { initTRPC } from '@trpc/server';
+import { randomUUID } from 'crypto';
 import type { Context } from '../context';
-import {
-  ProductSchema,
-  CreateProductSchema,
-  UpdateProductSchema,
-} from '@vylune/core/schemas';
+import { CreateProductSchema, UpdateProductSchema } from '@vylune/core/schemas';
 
 const t = initTRPC.context<Context>().create();
 
@@ -26,10 +23,11 @@ export const productRouter = t.router({
   create: t.procedure.input(CreateProductSchema).mutation(async ({ ctx, input }) => {
     const now = new Date().toISOString();
     const product = await ctx.models.Product.create({
+      id: randomUUID(),
       ...input,
       createdAt: now,
       updatedAt: now,
-    });
+    } as any);
     return product;
   }),
 
@@ -40,7 +38,7 @@ export const productRouter = t.router({
         id: input.id,
         ...input.data,
         updatedAt: new Date().toISOString(),
-      });
+      } as any);
       return product;
     }),
 

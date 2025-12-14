@@ -12,15 +12,11 @@ export interface Context {
   userRole?: string;
 }
 
-export const createContext = async (
-  event?: APIGatewayProxyEventV2
-): Promise<Context> => {
-  const userId = event?.requestContext?.authorizer?.jwt?.claims?.sub as
-    | string
-    | undefined;
-  const userRole = event?.requestContext?.authorizer?.jwt?.claims?.[
-    'custom:role'
-  ] as string | undefined;
+export const createContext = async (event?: APIGatewayProxyEventV2): Promise<Context> => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const authorizer = (event?.requestContext as any)?.authorizer;
+  const userId = authorizer?.jwt?.claims?.sub as string | undefined;
+  const userRole = authorizer?.jwt?.claims?.['custom:role'] as string | undefined;
 
   return {
     table,

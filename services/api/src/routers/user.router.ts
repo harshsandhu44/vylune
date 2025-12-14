@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { initTRPC } from '@trpc/server';
+import { randomUUID } from 'crypto';
 import type { Context } from '../context';
 import { CreateUserSchema } from '@vylune/core/schemas';
 
@@ -22,10 +23,11 @@ export const userRouter = t.router({
   create: t.procedure.input(CreateUserSchema).mutation(async ({ ctx, input }) => {
     const now = new Date().toISOString();
     const user = await ctx.models.User.create({
+      id: randomUUID(),
       ...input,
       createdAt: now,
       updatedAt: now,
-    });
+    } as any);
     return user;
   }),
 });
