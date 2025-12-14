@@ -13,7 +13,7 @@
   },
   "scripts": {
     "type-check": "tsc --noEmit",
-    "build": "echo 'Core package - no build step needed'",
+    "build": "tsc --build",
     "clean": "rm -rf dist *.tsbuildinfo"
   },
   "dependencies": {

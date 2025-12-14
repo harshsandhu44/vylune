@@ -1,12 +1,5 @@
-import type {
-  Product,
-  CreateProduct,
-  UpdateProduct,
-} from '../schemas/product.schema';
-import type {
-  StockMovement,
-  CreateStockMovement,
-} from '../schemas/stock.schema';
+import type { Product, CreateProduct, UpdateProduct } from '../schemas/product.schema';
+import type { StockMovement, CreateStockMovement } from '../schemas/stock.schema';
 import type { User, CreateUser } from '../schemas/user.schema';
 
 export interface AppRouter {
