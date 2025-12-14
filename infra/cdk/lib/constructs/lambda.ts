@@ -17,24 +17,29 @@ export class LambdaConstruct extends Construct {
     this.apiHandler = new lambda.Function(this, 'ApiHandler', {
       functionName: 'vylune-api-handler',
       runtime: lambda.Runtime.NODEJS_20_X,
-      handler: 'utils/lambda.handler',
+      handler: 'src/utils/lambda.handler',
       code: lambda.Code.fromAsset(
         path.join(__dirname, '../../../../services/api'),
         {
           bundling: {
             image: lambda.Runtime.NODEJS_20_X.bundlingImage,
-            command: [
-              'bash',
-              '-c',
-              [
-                'npm install -g bun',
-                'cd /asset-input',
-                'bun install --production',
-                'bun build src/index.ts --outdir /asset-output --target node',
-                'cp -r node_modules /asset-output/',
-                'cp -r src /asset-output/',
-              ].join(' && '),
-            ],
+            local: {
+              tryBundle(outputDir: string) {
+                const { execSync } = require('child_process');
+                const fs = require('fs');
+                const apiPath = path.join(__dirname, '../../../../services/api');
+
+                // Copy source files
+                execSync(`cp -r "${apiPath}/src" "${outputDir}/"`);
+                // Copy node_modules following symlinks
+                execSync(`cp -rL "${apiPath}/node_modules" "${outputDir}/"`);
+                // Copy package.json
+                execSync(`cp "${apiPath}/package.json" "${outputDir}/"`);
+
+                return true;
+              },
+            },
+            command: ['echo', 'Using local bundling'],
           },
         }
       ),
