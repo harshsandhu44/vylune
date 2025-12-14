@@ -1,6 +1,7 @@
 # Vylune - Inventory Management System
 
-Bun-powered monorepo for a modern inventory management system with multi-environment support.
+Bun-powered monorepo for a modern inventory management system
+with multi-environment support.
 
 ## Architecture
 
@@ -20,7 +21,7 @@ Bun-powered monorepo for a modern inventory management system with multi-environ
 
 ## Workspace Structure
 
-```
+```text
 vylune/
 ├── apps/web/            # Next.js application
 ├── packages/core/       # Shared schemas and types
@@ -56,21 +57,24 @@ bun run format:check     # Check formatting
 The infrastructure supports three environments:
 
 ### Development (dev)
+
 - **Region**: eu-central-1
 - **Resources**: VyluneTable-Dev, vylune-users-dev, vylune-api-dev
 - **CORS**: localhost:3000, localhost:3001
 - **Removal Policy**: DESTROY (resources deleted on stack deletion)
 
 ### Staging (stg)
+
 - **Region**: eu-central-1
 - **Resources**: VyluneTable-Stg, vylune-users-stg, vylune-api-stg
-- **CORS**: https://stg.vylune.com
+- **CORS**: <https://stg.vylune.com>
 - **Removal Policy**: RETAIN (resources preserved on stack deletion)
 
 ### Production (prd)
+
 - **Region**: eu-central-1
 - **Resources**: VyluneTable-Prd, vylune-users-prd, vylune-api-prd
-- **CORS**: https://vylune.com, https://www.vylune.com
+- **CORS**: <https://vylune.com>, <https://www.vylune.com>
 - **Removal Policy**: RETAIN (resources preserved on stack deletion)
 
 ## Infrastructure Deployment
@@ -102,6 +106,7 @@ bun run cdk:diff:prd
 ### Stack Outputs
 
 Each environment exports:
+
 - **UserPoolId**: Cognito User Pool ID
 - **UserPoolClientId**: Cognito User Pool Client ID
 - **TableName**: DynamoDB Table Name
@@ -113,6 +118,7 @@ Each environment exports:
 ### Core Package (`@vylune/core`)
 
 Shared Zod schemas and TypeScript types:
+
 - **Product**: id, name, sku, description, price, quantity
 - **StockMovement**: id, productId, type (IN/OUT/ADJUSTMENT), quantity, reason
 - **User**: id, email, name, role (ADMIN/MANAGER/STAFF), cognitoId
@@ -120,6 +126,7 @@ Shared Zod schemas and TypeScript types:
 ### API Service (`@vylune/api`)
 
 tRPC routers with DynamoDB OneTable:
+
 - **Product Router**: CRUD operations
 - **Stock Router**: List and create stock movements (auto-updates product quantity)
 - **User Router**: User management
@@ -127,6 +134,7 @@ tRPC routers with DynamoDB OneTable:
 ### Infrastructure (`@vylune/infra-cdk`)
 
 AWS CDK stack with:
+
 - **DynamoDB**: Single-table design with GSI
 - **Cognito**: User pool with custom role attribute
 - **Lambda**: API handlers (Node.js 20.x, bundled with Bun)
@@ -145,4 +153,5 @@ AWS CDK stack with:
 
 ## Configuration
 
-Environment configurations are defined in `infra/cdk/config/environments.ts`. Modify as needed for your AWS account and domain settings.
+Environment configurations are defined in `infra/cdk/config/environments.ts`.
+Modify as needed for your AWS account and domain settings.
