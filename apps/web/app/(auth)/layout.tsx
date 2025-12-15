@@ -1,9 +1,8 @@
-import type { PropsWithChildren } from 'react';
 import Link from 'next/link';
 import { ArrowLeftIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-export default function AuthLayout({ children }: PropsWithChildren) {
+export default function AuthLayout({ children }: LayoutProps<'/'>) {
   return (
     <div className="min-h-dvh w-full bg-muted/40">
       <div className="mx-auto flex min-h-dvh max-w-md flex-col justify-center p-4">
