@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { VerifyEmailSchema, type VerifyEmail } from '@vylune/core/schemas';
 import { handleConfirmSignUp, handleResendSignUpCode, handleSignIn } from '@/lib/auth';
 import { useAuthStore } from '@/stores/auth.store';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -14,16 +14,19 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { trpc } from '@/lib/trpc';
 
-export default function VerifyEmailPage() {
+export default function VerifyEmailPage({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const { pendingSignUp, clearPendingSignUp, setAuth } = useAuthStore();
 
   const [error, setError] = useState<string | null>(null);
   const [resendCooldown, setResendCooldown] = useState(0);
   const [resendMessage, setResendMessage] = useState<string | null>(null);
 
-  const email = pendingSignUp?.email || searchParams.get('email');
+  const email = pendingSignUp?.email || (searchParams.email as string);
   const createUserMutation = trpc.user.create.useMutation();
 
   const {
