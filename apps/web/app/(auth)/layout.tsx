@@ -12,7 +12,7 @@ export default function AuthLayout({ children }: LayoutProps<'/'>) {
               <ArrowLeftIcon /> Back
             </Link>
           </Button>
-          <div className="text-sm text-muted-foreground">Your App</div>
+          <div className="text-sm text-muted-foreground">Vylune</div>
         </div>
 
         {children}

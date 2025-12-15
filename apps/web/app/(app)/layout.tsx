@@ -9,7 +9,7 @@ export default function AppLayout({ children }: LayoutProps<'/'>) {
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
           <div className="flex items-center gap-6">
             <Link href="/" className="text-sm font-semibold">
-              Inventory MVP
+              Vylune
             </Link>
 
             <nav className="hidden items-center gap-4 md:flex">
