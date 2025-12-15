@@ -4,7 +4,7 @@
     "rootDir": "./src",
     "outDir": "./dist",
     "lib": ["ES2022"],
-    "types": ["node", "@types/aws-lambda"]
+    "types": ["bun", "@types/aws-lambda"]
   },
   "include": ["src/**/*"],
   "references": [{ "path": "../../packages/core" }]

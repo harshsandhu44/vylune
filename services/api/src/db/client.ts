@@ -1,4 +1,4 @@
-import { Table, type Model } from 'dynamodb-onetable';
+import { Table } from 'dynamodb-onetable';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { OneTableSchema } from './schema';
 
@@ -11,8 +11,10 @@ export const table: Table = new Table({
   client,
   schema: OneTableSchema,
   logger: process.env.NODE_ENV === 'development',
+  uuid: () => Bun.randomUUIDv7(),
+  timestamps: true,
 });
 
-export const ProductModel: Model<any> = table.getModel('Product');
-export const StockMovementModel: Model<any> = table.getModel('StockMovement');
-export const UserModel: Model<any> = table.getModel('User');
+export const ProductModel = table.getModel('Product') as any; // eslint-disable-line @typescript-eslint/no-explicit-any
+export const StockMovementModel = table.getModel('StockMovement') as any; // eslint-disable-line @typescript-eslint/no-explicit-any
+export const UserModel = table.getModel('User') as any; // eslint-disable-line @typescript-eslint/no-explicit-any
