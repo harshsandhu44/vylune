@@ -30,5 +30,11 @@ export class DynamoDBConstruct extends Construct {
       sortKey: { name: 'gs1sk', type: dynamodb.AttributeType.STRING },
       projectionType: dynamodb.ProjectionType.ALL,
     });
+
+    this.table.addGlobalSecondaryIndex({
+      indexName: 'gsi2',
+      partitionKey: { name: 'cognitoId', type: dynamodb.AttributeType.STRING },
+      projectionType: dynamodb.ProjectionType.ALL,
+    });
   }
 }
