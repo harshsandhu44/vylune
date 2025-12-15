@@ -24,6 +24,7 @@ import { trpc } from '@/lib/trpc';
 export default function SignUpPage() {
   const router = useRouter();
   const setAuth = useAuthStore((state) => state.setAuth);
+  const setPendingSignUp = useAuthStore((state) => state.setPendingSignUp);
   const [error, setError] = useState<string | null>(null);
 
   const {
@@ -40,7 +41,21 @@ export default function SignUpPage() {
     try {
       setError(null);
 
-      const { userId: cognitoId, email, name } = await handleSignUp(data);
+      const { userId: cognitoId, email, name, nextStep, isSignUpComplete } =
+        await handleSignUp(data);
+
+      if (!isSignUpComplete && nextStep?.signUpStep === 'CONFIRM_SIGN_UP') {
+        setPendingSignUp({
+          email,
+          password: data.password,
+          name,
+          cognitoId,
+          timestamp: Date.now(),
+        });
+
+        router.push(`/verify-email?email=${encodeURIComponent(email)}`);
+        return;
+      }
 
       const { token } = await handleSignIn({
         email: data.email,

@@ -24,6 +24,7 @@ import { trpc } from '@/lib/trpc';
 export default function SignInPage() {
   const router = useRouter();
   const setAuth = useAuthStore((state) => state.setAuth);
+  const setPendingSignUp = useAuthStore((state) => state.setPendingSignUp);
   const [error, setError] = useState<string | null>(null);
 
   const {
@@ -70,6 +71,20 @@ export default function SignInPage() {
       router.push('/');
     } catch (err: any) {
       console.error('Sign in error:', err);
+
+      if (err.message === 'CONFIRM_REQUIRED') {
+        setPendingSignUp({
+          email: data.email,
+          password: data.password,
+          name: '',
+          cognitoId: '',
+          timestamp: Date.now(),
+        });
+
+        router.push(`/verify-email?email=${encodeURIComponent(data.email)}`);
+        return;
+      }
+
       setError(
         err.message || 'Failed to sign in. Please check your credentials.'
       );
