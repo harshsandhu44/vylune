@@ -38,9 +38,7 @@ export default function AppLayout({ children }: LayoutProps<'/'>) {
 
           <div className="flex items-center gap-2">
             {user && (
-              <span className="text-sm text-muted-foreground hidden md:block">
-                {user.name}
-              </span>
+              <span className="text-sm text-muted-foreground hidden md:block">{user.name}</span>
             )}
             <Button variant="outline" size="sm" onClick={logout}>
               Sign out

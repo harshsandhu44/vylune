@@ -18,31 +18,28 @@ export class LambdaConstruct extends Construct {
       functionName: 'vylune-api-handler',
       runtime: lambda.Runtime.NODEJS_20_X,
       handler: 'src/utils/lambda.handler',
-      code: lambda.Code.fromAsset(
-        path.join(__dirname, '../../../../services/api'),
-        {
-          bundling: {
-            image: lambda.Runtime.NODEJS_20_X.bundlingImage,
-            local: {
-              tryBundle(outputDir: string) {
-                const { execSync } = require('child_process');
-                const fs = require('fs');
-                const apiPath = path.join(__dirname, '../../../../services/api');
+      code: lambda.Code.fromAsset(path.join(__dirname, '../../../../services/api'), {
+        bundling: {
+          image: lambda.Runtime.NODEJS_20_X.bundlingImage,
+          local: {
+            tryBundle(outputDir: string) {
+              const { execSync } = require('child_process');
+              const fs = require('fs');
+              const apiPath = path.join(__dirname, '../../../../services/api');
 
-                // Copy source files
-                execSync(`cp -r "${apiPath}/src" "${outputDir}/"`);
-                // Copy node_modules following symlinks
-                execSync(`cp -rL "${apiPath}/node_modules" "${outputDir}/"`);
-                // Copy package.json
-                execSync(`cp "${apiPath}/package.json" "${outputDir}/"`);
+              // Copy source files
+              execSync(`cp -r "${apiPath}/src" "${outputDir}/"`);
+              // Copy node_modules following symlinks
+              execSync(`cp -rL "${apiPath}/node_modules" "${outputDir}/"`);
+              // Copy package.json
+              execSync(`cp "${apiPath}/package.json" "${outputDir}/"`);
 
-                return true;
-              },
+              return true;
             },
-            command: ['echo', 'Using local bundling'],
           },
-        }
-      ),
+          command: ['echo', 'Using local bundling'],
+        },
+      }),
       timeout: cdk.Duration.seconds(30),
       memorySize: 512,
       environment: {

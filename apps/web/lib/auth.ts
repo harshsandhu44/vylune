@@ -37,10 +37,7 @@ export async function handleSignIn(credentials: SignInData) {
 
     return { token, cognitoId, email: credentials.email };
   } catch (error: any) {
-    if (
-      error.name === 'UserNotConfirmedException' ||
-      error.message === 'CONFIRM_REQUIRED'
-    ) {
+    if (error.name === 'UserNotConfirmedException' || error.message === 'CONFIRM_REQUIRED') {
       throw new Error('CONFIRM_REQUIRED');
     }
     throw error;

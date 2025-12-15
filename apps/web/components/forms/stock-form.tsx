@@ -75,9 +75,7 @@ export function StockForm() {
           <option value="OUT">OUT - Removing stock</option>
           <option value="ADJUSTMENT">ADJUSTMENT - Inventory correction</option>
         </select>
-        {errors.type && (
-          <p className="text-sm text-destructive mt-1">{errors.type.message}</p>
-        )}
+        {errors.type && <p className="text-sm text-destructive mt-1">{errors.type.message}</p>}
       </div>
 
       <div>
@@ -106,9 +104,7 @@ export function StockForm() {
           className="w-full px-3 py-2 border border-input rounded-md bg-background"
           placeholder="Optional reason for this stock movement"
         />
-        {errors.reason && (
-          <p className="text-sm text-destructive mt-1">{errors.reason.message}</p>
-        )}
+        {errors.reason && <p className="text-sm text-destructive mt-1">{errors.reason.message}</p>}
       </div>
 
       <div>

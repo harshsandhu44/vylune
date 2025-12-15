@@ -19,7 +19,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { trpc } from '@/lib/trpc';
 
 export default function SignInPage() {
   const router = useRouter();
@@ -85,9 +84,7 @@ export default function SignInPage() {
         return;
       }
 
-      setError(
-        err.message || 'Failed to sign in. Please check your credentials.'
-      );
+      setError(err.message || 'Failed to sign in. Please check your credentials.');
     }
   };
 
@@ -95,9 +92,7 @@ export default function SignInPage() {
     <Card>
       <CardHeader>
         <CardTitle>Sign in</CardTitle>
-        <CardDescription>
-          Enter your email and password to continue.
-        </CardDescription>
+        <CardDescription>Enter your email and password to continue.</CardDescription>
       </CardHeader>
 
       <CardContent>
@@ -111,9 +106,7 @@ export default function SignInPage() {
               autoComplete="email"
               {...register('email')}
             />
-            {errors.email && (
-              <p className="text-sm text-destructive">{errors.email.message}</p>
-            )}
+            {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
           </div>
 
           <div className="grid gap-2">
@@ -125,9 +118,7 @@ export default function SignInPage() {
               {...register('password')}
             />
             {errors.password && (
-              <p className="text-sm text-destructive">
-                {errors.password.message}
-              </p>
+              <p className="text-sm text-destructive">{errors.password.message}</p>
             )}
           </div>
 
@@ -146,10 +137,7 @@ export default function SignInPage() {
       <CardFooter className="justify-center">
         <p className="text-sm text-muted-foreground">
           No account?{' '}
-          <Link
-            href="/sign-up"
-            className="text-foreground underline underline-offset-4"
-          >
+          <Link href="/sign-up" className="text-foreground underline underline-offset-4">
             Sign up
           </Link>
         </p>

@@ -41,8 +41,13 @@ export default function SignUpPage() {
     try {
       setError(null);
 
-      const { userId: cognitoId, email, name, nextStep, isSignUpComplete } =
-        await handleSignUp(data);
+      const {
+        userId: cognitoId,
+        email,
+        name,
+        nextStep,
+        isSignUpComplete,
+      } = await handleSignUp(data);
 
       if (!isSignUpComplete && nextStep?.signUpStep === 'CONFIRM_SIGN_UP') {
         setPendingSignUp({
@@ -61,6 +66,9 @@ export default function SignUpPage() {
         email: data.email,
         password: data.password,
       });
+
+      // Store token temporarily so tRPC can use it for Authorization header
+      useAuthStore.setState({ token });
 
       const user = await createUserMutation.mutateAsync({
         email,
@@ -101,9 +109,7 @@ export default function SignUpPage() {
               autoComplete="name"
               {...register('name')}
             />
-            {errors.name && (
-              <p className="text-sm text-destructive">{errors.name.message}</p>
-            )}
+            {errors.name && <p className="text-sm text-destructive">{errors.name.message}</p>}
           </div>
 
           <div className="grid gap-2">
@@ -115,9 +121,7 @@ export default function SignUpPage() {
               autoComplete="email"
               {...register('email')}
             />
-            {errors.email && (
-              <p className="text-sm text-destructive">{errors.email.message}</p>
-            )}
+            {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
           </div>
 
           <div className="grid gap-2">
@@ -129,9 +133,7 @@ export default function SignUpPage() {
               {...register('password')}
             />
             {errors.password && (
-              <p className="text-sm text-destructive">
-                {errors.password.message}
-              </p>
+              <p className="text-sm text-destructive">{errors.password.message}</p>
             )}
           </div>
 
@@ -144,9 +146,7 @@ export default function SignUpPage() {
               {...register('confirmPassword')}
             />
             {errors.confirmPassword && (
-              <p className="text-sm text-destructive">
-                {errors.confirmPassword.message}
-              </p>
+              <p className="text-sm text-destructive">{errors.confirmPassword.message}</p>
             )}
           </div>
 
@@ -165,10 +165,7 @@ export default function SignUpPage() {
       <CardFooter className="justify-center">
         <p className="text-sm text-muted-foreground">
           Already have an account?{' '}
-          <Link
-            href="/sign-in"
-            className="text-foreground underline underline-offset-4"
-          >
+          <Link href="/sign-in" className="text-foreground underline underline-offset-4">
             Sign in
           </Link>
         </p>

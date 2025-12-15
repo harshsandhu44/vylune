@@ -48,9 +48,7 @@ export function ProductForm() {
           {...register('name')}
           className="w-full px-3 py-2 border border-input rounded-md bg-background"
         />
-        {errors.name && (
-          <p className="text-sm text-destructive mt-1">{errors.name.message}</p>
-        )}
+        {errors.name && <p className="text-sm text-destructive mt-1">{errors.name.message}</p>}
       </div>
 
       <div>
@@ -63,9 +61,7 @@ export function ProductForm() {
           {...register('sku')}
           className="w-full px-3 py-2 border border-input rounded-md bg-background"
         />
-        {errors.sku && (
-          <p className="text-sm text-destructive mt-1">{errors.sku.message}</p>
-        )}
+        {errors.sku && <p className="text-sm text-destructive mt-1">{errors.sku.message}</p>}
       </div>
 
       <div>
@@ -95,9 +91,7 @@ export function ProductForm() {
             {...register('price', { valueAsNumber: true })}
             className="w-full px-3 py-2 border border-input rounded-md bg-background"
           />
-          {errors.price && (
-            <p className="text-sm text-destructive mt-1">{errors.price.message}</p>
-          )}
+          {errors.price && <p className="text-sm text-destructive mt-1">{errors.price.message}</p>}
         </div>
 
         <div>

@@ -3,22 +3,12 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { VerifyEmailSchema, type VerifyEmail } from '@vylune/core/schemas';
-import {
-  handleConfirmSignUp,
-  handleResendSignUpCode,
-  handleSignIn,
-} from '@/lib/auth';
+import { handleConfirmSignUp, handleResendSignUpCode, handleSignIn } from '@/lib/auth';
 import { useAuthStore } from '@/stores/auth.store';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -57,10 +47,7 @@ export default function VerifyEmailPage() {
 
   useEffect(() => {
     if (resendCooldown > 0) {
-      const timer = setTimeout(
-        () => setResendCooldown(resendCooldown - 1),
-        1000
-      );
+      const timer = setTimeout(() => setResendCooldown(resendCooldown - 1), 1000);
       return () => clearTimeout(timer);
     }
   }, [resendCooldown]);
@@ -81,6 +68,9 @@ export default function VerifyEmailPage() {
         email: pendingSignUp.email,
         password: pendingSignUp.password,
       });
+
+      // Store token temporarily so tRPC can use it for Authorization header
+      useAuthStore.setState({ token });
 
       const user = await createUserMutation.mutateAsync({
         email: pendingSignUp.email,
@@ -103,22 +93,12 @@ export default function VerifyEmailPage() {
 
       let errorMessage = 'Verification failed. Please try again.';
 
-      if (
-        err.name === 'CodeMismatchException' ||
-        err.message.includes('Invalid code')
-      ) {
+      if (err.name === 'CodeMismatchException' || err.message.includes('Invalid code')) {
         errorMessage = 'Invalid verification code. Please check and try again.';
-      } else if (
-        err.name === 'ExpiredCodeException' ||
-        err.message.includes('expired')
-      ) {
+      } else if (err.name === 'ExpiredCodeException' || err.message.includes('expired')) {
         errorMessage = 'Verification code has expired. Please request a new one.';
-      } else if (
-        err.name === 'LimitExceededException' ||
-        err.message.includes('limit')
-      ) {
-        errorMessage =
-          'Too many attempts. Please request a new code and try again.';
+      } else if (err.name === 'LimitExceededException' || err.message.includes('limit')) {
+        errorMessage = 'Too many attempts. Please request a new code and try again.';
       } else if (err.name === 'NotAuthorizedException') {
         errorMessage = 'Invalid code or code already used. Please request a new one.';
       }
@@ -146,12 +126,8 @@ export default function VerifyEmailPage() {
 
       let errorMessage = 'Failed to resend code. Please try again.';
 
-      if (
-        err.name === 'LimitExceededException' ||
-        err.message.includes('limit')
-      ) {
-        errorMessage =
-          'Too many resend attempts. Please wait a few minutes and try again.';
+      if (err.name === 'LimitExceededException' || err.message.includes('limit')) {
+        errorMessage = 'Too many resend attempts. Please wait a few minutes and try again.';
       } else if (
         err.name === 'InvalidParameterException' ||
         err.message.includes('already confirmed')
@@ -173,8 +149,7 @@ export default function VerifyEmailPage() {
       <CardHeader>
         <CardTitle>Verify your email</CardTitle>
         <CardDescription>
-          We've sent a 6-digit code to{' '}
-          <span className="font-medium text-foreground">{email}</span>
+          We've sent a 6-digit code to <span className="font-medium text-foreground">{email}</span>
         </CardDescription>
       </CardHeader>
 
@@ -193,16 +168,12 @@ export default function VerifyEmailPage() {
               autoComplete="one-time-code"
               {...register('code')}
             />
-            {errors.code && (
-              <p className="text-sm text-destructive">{errors.code.message}</p>
-            )}
+            {errors.code && <p className="text-sm text-destructive">{errors.code.message}</p>}
           </div>
 
           {resendMessage && (
             <div className="p-3 bg-green-50 border border-green-200 rounded-md dark:bg-green-950 dark:border-green-800">
-              <p className="text-sm text-green-800 dark:text-green-200">
-                {resendMessage}
-              </p>
+              <p className="text-sm text-green-800 dark:text-green-200">{resendMessage}</p>
             </div>
           )}
 
@@ -221,9 +192,7 @@ export default function VerifyEmailPage() {
               <span className="w-full border-t" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">
-                Didn't receive code?
-              </span>
+              <span className="bg-background px-2 text-muted-foreground">Didn't receive code?</span>
             </div>
           </div>
 
@@ -234,9 +203,7 @@ export default function VerifyEmailPage() {
             disabled={resendCooldown > 0}
             className="w-full"
           >
-            {resendCooldown > 0
-              ? `Resend code in ${resendCooldown}s`
-              : 'Resend code'}
+            {resendCooldown > 0 ? `Resend code in ${resendCooldown}s` : 'Resend code'}
           </Button>
         </form>
 
