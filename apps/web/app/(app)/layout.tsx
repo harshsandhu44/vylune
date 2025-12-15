@@ -34,7 +34,7 @@ export default function AppLayout({ children }: LayoutProps<'/'>) {
           <div className="flex items-center gap-2">
             {/* TODO: replace with real user + logout action (Better Auth / Cognito) */}
             <Button variant="outline" size="sm" asChild>
-              <Link href="/(auth)/sign-in">Sign out</Link>
+              <Link href="/sign-in">Sign out</Link>
             </Button>
           </div>
         </div>
