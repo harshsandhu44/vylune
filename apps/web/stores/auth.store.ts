@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-interface AuthUser {
+export interface AuthUser {
   id: string;
   email: string;
   name: string;
@@ -12,7 +12,7 @@ interface PendingSignUp {
   email: string;
   password: string;
   name: string;
-  cognitoId: string;
+  cognitoId?: string;
   timestamp: number;
 }
 

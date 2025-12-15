@@ -6,6 +6,7 @@ import {
   fetchAuthSession,
   confirmSignUp,
   resendSignUpCode,
+  type SignUpOutput,
 } from 'aws-amplify/auth';
 import { useAuthStore } from '@/stores/auth.store';
 import { type SignIn as SignInData, type SignUp as SignUpData } from '@vylune/core/schemas';
@@ -44,7 +45,7 @@ export async function handleSignIn(credentials: SignInData) {
   }
 }
 
-export async function handleSignUp(data: SignUpData) {
+export async function handleSignUp(data: SignUpData): Promise<SignUpOutput & { email: string; name: string }> {
   const result = await signUp({
     username: data.email,
     password: data.password,
@@ -58,11 +59,9 @@ export async function handleSignUp(data: SignUpData) {
   });
 
   return {
-    userId: result.userId,
+    ...result,
     email: data.email,
     name: data.name,
-    nextStep: result.nextStep,
-    isSignUpComplete: result.isSignUpComplete,
   };
 }
 

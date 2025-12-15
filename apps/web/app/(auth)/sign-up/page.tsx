@@ -54,12 +54,16 @@ export default function SignUpPage() {
           email,
           password: data.password,
           name,
-          cognitoId,
+          cognitoId: cognitoId,
           timestamp: Date.now(),
         });
 
         router.push(`/verify-email?email=${encodeURIComponent(email)}`);
         return;
+      }
+
+      if (!cognitoId) {
+        throw new Error('Cognito ID not found after sign up');
       }
 
       const { token } = await handleSignIn({
