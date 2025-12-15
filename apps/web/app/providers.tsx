@@ -1,10 +1,11 @@
 'use client';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { trpc } from '@/lib/trpc';
 import { trpcConfig } from '@/lib/api';
 import { useTokenRefresh } from '@/hooks/use-token-refresh';
+import { configureAmplify } from '@/lib/amplify';
 
 function AuthProvider({ children }: { children: React.ReactNode }) {
   useTokenRefresh();
@@ -20,6 +21,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
     },
   }));
   const [trpcClient] = useState(() => trpc.createClient(trpcConfig));
+
+  useEffect(() => {
+    configureAmplify();
+  }, []);
 
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
