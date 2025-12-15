@@ -26,5 +26,13 @@ export const SignUpSchema = z
     path: ['confirmPassword'],
   });
 
+export const VerifyEmailSchema = z.object({
+  code: z
+    .string()
+    .length(6, 'Verification code must be 6 digits')
+    .regex(/^\d{6}$/, 'Verification code must contain only numbers'),
+});
+
 export type SignIn = z.infer<typeof SignInSchema>;
 export type SignUp = z.infer<typeof SignUpSchema>;
+export type VerifyEmail = z.infer<typeof VerifyEmailSchema>;
