@@ -17,22 +17,20 @@ export class LambdaConstruct extends Construct {
     this.apiHandler = new lambda.Function(this, 'ApiHandler', {
       functionName: 'vylune-api-handler',
       runtime: lambda.Runtime.NODEJS_20_X,
-      handler: 'src/utils/lambda.handler',
+      handler: 'lambda.handler',
       code: lambda.Code.fromAsset(path.join(__dirname, '../../../../services/api'), {
         bundling: {
           image: lambda.Runtime.NODEJS_20_X.bundlingImage,
           local: {
             tryBundle(outputDir: string) {
               const { execSync } = require('child_process');
-              const fs = require('fs');
               const apiPath = path.join(__dirname, '../../../../services/api');
 
-              // Copy source files
-              execSync(`cp -r "${apiPath}/src" "${outputDir}/"`);
-              // Copy node_modules following symlinks
-              execSync(`cp -rL "${apiPath}/node_modules" "${outputDir}/"`);
-              // Copy package.json
-              execSync(`cp "${apiPath}/package.json" "${outputDir}/"`);
+              // Run bun install and build
+              execSync(`cd "${apiPath}" && bun install && bun run build`);
+
+              // Copy the dist folder
+              execSync(`cp -r "${apiPath}/dist/." "${outputDir}/"`);
 
               return true;
             },

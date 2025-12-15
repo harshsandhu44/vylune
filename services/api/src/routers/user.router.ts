@@ -7,7 +7,7 @@ const t = initTRPC.context<Context>().create();
 
 export const userRouter = t.router({
   list: t.procedure.query(async ({ ctx }): Promise<User[]> => {
-    const users = await ctx.models.User.find({}, { index: 'gs1', where: '${gs1pk} = {USERS}' });
+    const users = await ctx.models.User.find({ gs1pk: 'USERS' }, { index: 'gs1' });
     return users as User[];
   }),
 
@@ -28,7 +28,6 @@ export const userRouter = t.router({
   create: t.procedure.input(CreateUserSchema).mutation(async ({ ctx, input }): Promise<User> => {
     const now = Date.now(); // Get numeric timestamp
     const user = await ctx.models.User.create({
-      id: Bun.randomUUIDv7(),
       ...input,
       createdAt: now,
       updatedAt: now,

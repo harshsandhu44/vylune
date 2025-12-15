@@ -38,7 +38,13 @@ export class ApiGatewayConstruct extends Construct {
       apiName: props.apiName,
       description: 'Vylune Inventory Management API',
       corsPreflight: {
-        allowHeaders: ['Content-Type', 'Authorization'],
+        allowHeaders: [
+          'Content-Type',
+          'Authorization',
+          'sec-ch-ua',
+          'sec-ch-ua-mobile',
+          'sec-ch-ua-platform',
+        ],
         allowMethods: [
           apigatewayv2.CorsHttpMethod.GET,
           apigatewayv2.CorsHttpMethod.POST,
@@ -53,7 +59,12 @@ export class ApiGatewayConstruct extends Construct {
 
     this.httpApi.addRoutes({
       path: '/trpc/{proxy+}',
-      methods: [apigatewayv2.HttpMethod.ANY],
+      methods: [
+        apigatewayv2.HttpMethod.GET,
+        apigatewayv2.HttpMethod.POST,
+        apigatewayv2.HttpMethod.PUT,
+        apigatewayv2.HttpMethod.DELETE,
+      ],
       integration,
       authorizer,
     });

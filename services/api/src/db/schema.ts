@@ -4,12 +4,13 @@ export const OneTableSchema = {
   indexes: {
     primary: { hash: 'pk', sort: 'sk' },
     gs1: { hash: 'gs1pk', sort: 'gs1sk', project: 'all' },
+    gsi2: { hash: 'cognitoId' },
   },
   models: {
     Product: {
       pk: { type: String, value: 'PRODUCT#${id}' },
       sk: { type: String, value: 'PRODUCT#${id}' },
-      id: { type: String, required: true, uuid: true },
+      id: { type: String, required: true, generate: 'uuid' },
       name: { type: String, required: true },
       sku: { type: String, required: true },
       description: { type: String },
@@ -23,7 +24,7 @@ export const OneTableSchema = {
     StockMovement: {
       pk: { type: String, value: 'PRODUCT#${productId}' },
       sk: { type: String, value: 'STOCK#${createdAt}#${id}' },
-      id: { type: String, required: true, uuid: true },
+      id: { type: String, required: true, generate: 'uuid' },
       productId: { type: String, required: true },
       type: { type: String, required: true },
       quantity: { type: Number, required: true },
@@ -36,7 +37,7 @@ export const OneTableSchema = {
     User: {
       pk: { type: String, value: 'USER#${id}' },
       sk: { type: String, value: 'USER#${id}' },
-      id: { type: String, required: true, uuid: true },
+      id: { type: String, required: true, generate: 'uuid' },
       email: { type: String, required: true },
       name: { type: String, required: true },
       role: { type: String, required: true },
