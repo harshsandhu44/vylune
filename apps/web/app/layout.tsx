@@ -1,6 +1,10 @@
 import type { Metadata } from 'next';
 import { Providers } from './providers';
+import { RouteGuard } from '@/components/auth/route-guard';
+import { configureAmplify } from '@/lib/amplify';
 import './globals.css';
+
+configureAmplify();
 
 export const metadata: Metadata = {
   title: 'Vylune - Inventory Management',
@@ -17,7 +21,9 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
         />
       </head>
       <body>
-        <Providers>{children}</Providers>
+        <Providers>
+          <RouteGuard>{children}</RouteGuard>
+        </Providers>
       </body>
     </html>
   );

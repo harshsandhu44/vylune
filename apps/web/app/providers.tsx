@@ -4,6 +4,12 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';
 import { trpc } from '@/lib/trpc';
 import { trpcConfig } from '@/lib/api';
+import { useTokenRefresh } from '@/hooks/use-token-refresh';
+
+function AuthProvider({ children }: { children: React.ReactNode }) {
+  useTokenRefresh();
+  return <>{children}</>;
+}
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(() => new QueryClient({
@@ -18,7 +24,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
-        {children}
+        <AuthProvider>{children}</AuthProvider>
       </QueryClientProvider>
     </trpc.Provider>
   );

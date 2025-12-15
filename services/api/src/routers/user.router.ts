@@ -18,6 +18,16 @@ export const userRouter = t.router({
       return (user as User) || null;
     }),
 
+  getByCognitoId: t.procedure
+    .input(z.object({ cognitoId: z.string() }))
+    .query(async ({ ctx, input }): Promise<User | null> => {
+      const users = await ctx.models.User.find(
+        { cognitoId: input.cognitoId },
+        { limit: 1 }
+      );
+      return users.length > 0 ? (users[0] as User) : null;
+    }),
+
   create: t.procedure.input(CreateUserSchema).mutation(async ({ ctx, input }): Promise<User> => {
     const user = await ctx.models.User.create({
       ...input,

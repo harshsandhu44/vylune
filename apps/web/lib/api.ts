@@ -1,4 +1,5 @@
 import { httpBatchLink } from '@trpc/client';
+import { useAuthStore } from '@/stores/auth.store';
 
 export function getBaseUrl() {
   if (typeof window !== 'undefined') return '';
@@ -10,8 +11,10 @@ export const trpcConfig = {
     httpBatchLink({
       url: `${getBaseUrl()}/trpc`,
       headers() {
+        const token = useAuthStore.getState().token;
+
         return {
-          // Add auth headers from cookies/session
+          ...(token && { Authorization: `Bearer ${token}` }),
         };
       },
     }),

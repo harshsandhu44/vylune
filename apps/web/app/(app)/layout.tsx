@@ -1,8 +1,13 @@
+'use client';
+
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import { useAuth } from '@/hooks/use-auth';
 
 export default function AppLayout({ children }: LayoutProps<'/'>) {
+  const { user, logout } = useAuth();
+
   return (
     <div className="min-h-dvh bg-background">
       <header className="sticky top-0 z-10 border-b bg-background/80 backdrop-blur">
@@ -32,9 +37,13 @@ export default function AppLayout({ children }: LayoutProps<'/'>) {
           </div>
 
           <div className="flex items-center gap-2">
-            {/* TODO: replace with real user + logout action (Better Auth / Cognito) */}
-            <Button variant="outline" size="sm" asChild>
-              <Link href="/sign-in">Sign out</Link>
+            {user && (
+              <span className="text-sm text-muted-foreground hidden md:block">
+                {user.name}
+              </span>
+            )}
+            <Button variant="outline" size="sm" onClick={logout}>
+              Sign out
             </Button>
           </div>
         </div>
