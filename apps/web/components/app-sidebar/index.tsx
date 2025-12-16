@@ -1,8 +1,8 @@
 'use client';
 
-import * as React from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Command, HandbagIcon, LayoutGridIcon } from 'lucide-react';
-
 import { NavMain } from '@/components/app-sidebar/nav-main';
 import {
   Sidebar,
@@ -13,8 +13,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { usePathname } from 'next/navigation';
-import Link from 'next/link';
+import { NavUser } from './nav-user';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const path = usePathname();
@@ -46,7 +45,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <NavMain items={navMain} />
       </SidebarContent>
-      <SidebarFooter></SidebarFooter>
+      <SidebarFooter>
+        <NavUser />
+      </SidebarFooter>
     </Sidebar>
   );
 }
