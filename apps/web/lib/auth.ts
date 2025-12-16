@@ -45,7 +45,9 @@ export async function handleSignIn(credentials: SignInData) {
   }
 }
 
-export async function handleSignUp(data: SignUpData): Promise<SignUpOutput & { email: string; name: string }> {
+export async function handleSignUp(
+  data: SignUpData
+): Promise<SignUpOutput & { email: string; name: string }> {
   const result = await signUp({
     username: data.email,
     password: data.password,

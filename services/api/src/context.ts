@@ -1,4 +1,11 @@
-import { table, ProductModel, StockMovementModel, UserModel } from './db/client';
+import {
+  table,
+  ProductModel,
+  StockMovementModel,
+  UserModel,
+  OrganizationModel,
+  OrganizationMemberModel,
+} from './db/client';
 import type { APIGatewayProxyEventV2 } from 'aws-lambda';
 
 export interface Context {
@@ -7,6 +14,8 @@ export interface Context {
     Product: typeof ProductModel;
     StockMovement: typeof StockMovementModel;
     User: typeof UserModel;
+    Organization: typeof OrganizationModel;
+    OrganizationMember: typeof OrganizationMemberModel;
   };
   userId?: string;
   userRole?: string;
@@ -24,6 +33,8 @@ export const createContext = async (event?: APIGatewayProxyEventV2): Promise<Con
       Product: ProductModel,
       StockMovement: StockMovementModel,
       User: UserModel,
+      Organization: OrganizationModel,
+      OrganizationMember: OrganizationMemberModel,
     },
     userId,
     userRole,

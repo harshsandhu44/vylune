@@ -18,3 +18,5 @@ export const table: Table = new Table({
 export const ProductModel = table.getModel('Product') as any; // eslint-disable-line @typescript-eslint/no-explicit-any
 export const StockMovementModel = table.getModel('StockMovement') as any; // eslint-disable-line @typescript-eslint/no-explicit-any
 export const UserModel = table.getModel('User') as any; // eslint-disable-line @typescript-eslint/no-explicit-any
+export const OrganizationModel = table.getModel('Organization') as any; // eslint-disable-line @typescript-eslint/no-explicit-any
+export const OrganizationMemberModel = table.getModel('OrganizationMember') as any; // eslint-disable-line @typescript-eslint/no-explicit-any
