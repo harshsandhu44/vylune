@@ -182,3 +182,164 @@ Stack outputs (exported for each environment):
 5. Deploy to dev environment: `bun run cdk:deploy:dev`
 6. Test in dev environment (supports both localhost and stg.vylune.com)
 7. Deploy to production: `bun run cdk:deploy:prd`
+
+## 🚧 In Progress: Organization & Subscription Management (Polar.sh Integration)
+
+**Goal**: Implement mandatory organization requirement with Polar.sh payment integration featuring 7-day trial and seat-based pricing (€25 for 5 seats, €10 per additional seat).
+
+### ✅ Completed (Phase 1: Database Schema)
+
+**Backend Schema Updates:**
+- ✅ Updated Organization model with subscription fields:
+  - `subscriptionStatus`, `trialStartDate`, `trialEndDate`
+  - `polarCustomerId`, `polarSubscriptionId`, `polarCheckoutId`
+  - `seatCount`, `baseSeatCount`, `additionalSeats`
+  - `currentPeriodStart`, `currentPeriodEnd`, `cancelAtPeriodEnd`
+- ✅ Added Subscription model for subscription history tracking
+- ✅ Added PolarWebhookEvent model for webhook idempotency
+- ✅ Updated Product model with `organizationId` for organization scoping
+- ✅ Updated StockMovement model with `organizationId` for organization scoping
+- ✅ Updated GSI1 patterns for organization-scoped queries
+- ✅ Updated database client exports for new models
+
+**Zod Schema Updates:**
+- ✅ Updated `OrganizationSchema` with subscription fields
+- ✅ Added `SubscriptionStatusSchema` enum
+- ✅ Added `SubscriptionSchema` and `CreateSubscriptionSchema`
+- ✅ Updated `CreateOrganizationSchema` to make subscription fields optional
+
+### ✅ Completed (Phase 2: Backend API - Partial)
+
+**Context & Middleware:**
+- ✅ Updated `services/api/src/context.ts` to extract `x-organization-id` header
+- ✅ Added Subscription and PolarWebhookEvent models to context
+- ✅ Created `services/api/src/middleware/organization.middleware.ts`:
+  - `requireOrganization()` - Verifies user is active member
+  - `requireLeader()` - Verifies user is organization leader
+  - `requireActiveSubscription()` - Checks trial/subscription status
+
+**Routers:**
+- ✅ Created `services/api/src/routers/organization.router.ts`:
+  - `get()` - Get organization by ID
+  - `create()` - Create organization with 7-day trial
+  - `update()` - Update organization name
+  - `getSubscriptionStatus()` - Get subscription status with days remaining
+  - `getSeatUsage()` - Get seat usage statistics
+  - `transferLeadership()` - Transfer leadership to another member
+
+### ⏳ Remaining Tasks
+
+**Phase 2: Backend API (Remaining):**
+- ⏳ Create `services/api/src/services/polar.service.ts`:
+  - `createCheckout()` - Create Polar.sh checkout session
+  - `updateSubscription()` - Update subscription seat count
+  - `cancelSubscription()` - Cancel subscription
+  - `verifyWebhookSignature()` - Verify webhook signatures
+- ⏳ Create `services/api/src/routers/subscription.router.ts`:
+  - `createCheckout()` - Initiate payment flow
+  - `updateSeats()` - Add/remove seats
+  - `cancelSubscription()` - Cancel subscription
+  - `getHistory()` - Get subscription history
+- ⏳ Create `services/api/src/routers/member.router.ts`:
+  - `invite()` - Invite member with seat check
+  - `remove()` - Remove member from organization
+  - `acceptInvitation()` - Accept pending invitation
+  - `rejectInvitation()` - Reject invitation
+  - `list()` - List organization members
+  - `listPending()` - List pending invitations
+- ⏳ Update `services/api/src/routers/product.router.ts`:
+  - Add `requireOrganization()` middleware to all endpoints
+  - Add `requireActiveSubscription()` middleware
+  - Add `organizationId` to create operations
+  - Update list queries to filter by organization
+- ⏳ Update `services/api/src/routers/stock.router.ts`:
+  - Add organization middleware
+  - Add `organizationId` to create operations
+  - Update queries for organization scoping
+- ⏳ Update `services/api/src/index.ts`:
+  - Add organization, subscription, and member routers to main router
+- ⏳ Create `services/api/src/utils/webhook-handler.ts`:
+  - Webhook handler Lambda for Polar.sh events
+  - Handle: subscription.created, subscription.updated, subscription.cancelled
+  - Idempotency checks using PolarWebhookEvent model
+
+**Phase 3: Frontend State Management:**
+- ⏳ Create `apps/web/stores/organization.store.ts`:
+  - Organization state with current organization and list
+  - Computed helpers: `isLeader()`, `isTrialActive()`, `canAccessApp()`, `daysRemainingInTrial()`
+- ⏳ Update `apps/web/lib/trpc.ts`:
+  - Add `x-organization-id` header to all requests
+- ⏳ Create `apps/web/providers/organization-provider.tsx`:
+  - Fetch user organizations on mount
+  - Auto-select first organization if none selected
+  - Provide organization context to app
+
+**Phase 4: Frontend UI Components:**
+- ⏳ Create `apps/web/app/(auth)/onboarding/page.tsx`:
+  - Multi-step wizard: Welcome → Create Org → Trial Activated
+- ⏳ Update `apps/web/app/(auth)/verify-email/page.tsx`:
+  - Redirect to `/onboarding` instead of `/`
+- ⏳ Create `apps/web/components/organization-switcher.tsx`:
+  - Dropdown to switch between organizations
+- ⏳ Update `apps/web/components/app-sidebar/index.tsx`:
+  - Add organization switcher to sidebar header
+- ⏳ Create `apps/web/components/trial-banner.tsx`:
+  - Show trial status and upgrade prompt
+- ⏳ Create `apps/web/app/(app)/settings/organization/page.tsx`:
+  - Settings page with tabs: General, Members, Billing
+- ⏳ Create `apps/web/components/settings/organization-general.tsx`:
+  - Organization name, leader, transfer leadership
+- ⏳ Create `apps/web/components/settings/organization-members.tsx`:
+  - List members, invite/remove members, show pending invitations
+- ⏳ Create `apps/web/components/settings/organization-billing.tsx`:
+  - Subscription status, seat usage, upgrade button, seat management
+- ⏳ Create `apps/web/app/(app)/payment/success/page.tsx`:
+  - Landing page after Polar.sh payment redirect
+  - Poll for subscription activation
+- ⏳ Update `apps/web/components/auth/route-guard.tsx`:
+  - Add organization requirement check
+  - Redirect to onboarding if no organization
+  - Check subscription status for protected routes
+  - Redirect to billing if trial/subscription expired
+
+**Phase 5: Infrastructure Updates:**
+- ⏳ Update `infra/cdk/lib/cdk-stack.ts`:
+  - Add webhook Lambda handler
+  - Add environment variables for Polar.sh configuration
+- ⏳ Update `infra/cdk/lib/constructs/api-gateway.ts`:
+  - Add `/webhooks/polar` route (no auth)
+- ⏳ Set environment variables:
+  - `POLAR_API_KEY`, `POLAR_BASE_PRODUCT_ID`, `POLAR_ADDITIONAL_SEAT_PRICE_ID`
+  - `POLAR_WEBHOOK_SECRET`, `FRONTEND_URL`
+
+**Phase 6: Polar.sh Configuration:**
+- ⏳ Create products in Polar.sh dashboard:
+  - Base Product: "Vylune Inventory - Base Plan" (€25/month, 5 seats)
+  - Additional Seat: "Additional Seat" (€10/month per seat)
+- ⏳ Configure webhook in Polar.sh:
+  - URL: API Gateway webhook endpoint
+  - Events: subscription.created, subscription.updated, subscription.cancelled
+- ⏳ Save Polar.sh credentials to environment
+
+**Phase 7: Testing & Deployment:**
+- ⏳ Type check all workspaces
+- ⏳ Test organization creation and trial activation
+- ⏳ Test Polar.sh checkout flow (test mode)
+- ⏳ Test webhook event processing
+- ⏳ Test organization switching
+- ⏳ Test seat management
+- ⏳ Deploy to dev environment
+- ⏳ End-to-end testing in dev
+
+### Implementation Plan
+
+**Full plan available at**: `~/.claude/plans/goofy-fluttering-pine.md`
+
+**Key Features:**
+- Organization-first architecture with all data scoped to organizations
+- 7-day trial period with automatic activation
+- Polar.sh redirect checkout with tiered pricing
+- Multi-organization support with switcher
+- Full member management (invite, remove, transfer leadership)
+- Subscription enforcement via middleware
+- Webhook handling with idempotency

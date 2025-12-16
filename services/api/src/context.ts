@@ -5,6 +5,8 @@ import {
   UserModel,
   OrganizationModel,
   OrganizationMemberModel,
+  SubscriptionModel,
+  PolarWebhookEventModel,
 } from './db/client';
 import type { APIGatewayProxyEventV2 } from 'aws-lambda';
 
@@ -16,9 +18,12 @@ export interface Context {
     User: typeof UserModel;
     Organization: typeof OrganizationModel;
     OrganizationMember: typeof OrganizationMemberModel;
+    Subscription: typeof SubscriptionModel;
+    PolarWebhookEvent: typeof PolarWebhookEventModel;
   };
   userId?: string;
   userRole?: string;
+  organizationId?: string;
 }
 
 export const createContext = async (event?: APIGatewayProxyEventV2): Promise<Context> => {
@@ -26,6 +31,9 @@ export const createContext = async (event?: APIGatewayProxyEventV2): Promise<Con
   const authorizer = (event?.requestContext as any)?.authorizer;
   const userId = authorizer?.jwt?.claims?.sub as string | undefined;
   const userRole = authorizer?.jwt?.claims?.['custom:role'] as string | undefined;
+
+  // Extract organization ID from custom header
+  const organizationId = event?.headers?.['x-organization-id'] as string | undefined;
 
   return {
     table,
@@ -35,8 +43,11 @@ export const createContext = async (event?: APIGatewayProxyEventV2): Promise<Con
       User: UserModel,
       Organization: OrganizationModel,
       OrganizationMember: OrganizationMemberModel,
+      Subscription: SubscriptionModel,
+      PolarWebhookEvent: PolarWebhookEventModel,
     },
     userId,
     userRole,
+    organizationId,
   };
 };

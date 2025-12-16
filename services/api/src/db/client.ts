@@ -20,3 +20,5 @@ export const StockMovementModel = table.getModel('StockMovement') as any; // esl
 export const UserModel = table.getModel('User') as any; // eslint-disable-line @typescript-eslint/no-explicit-any
 export const OrganizationModel = table.getModel('Organization') as any; // eslint-disable-line @typescript-eslint/no-explicit-any
 export const OrganizationMemberModel = table.getModel('OrganizationMember') as any; // eslint-disable-line @typescript-eslint/no-explicit-any
+export const SubscriptionModel = table.getModel('Subscription') as any; // eslint-disable-line @typescript-eslint/no-explicit-any
+export const PolarWebhookEventModel = table.getModel('PolarWebhookEvent') as any; // eslint-disable-line @typescript-eslint/no-explicit-any
