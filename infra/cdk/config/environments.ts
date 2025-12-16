@@ -21,20 +21,12 @@ export const environments: Record<string, EnvironmentConfig> = {
     tableName: 'VyluneTable-Dev',
     userPoolName: 'vylune-users-dev',
     apiName: 'vylune-api-dev',
-    allowedOrigins: ['http://localhost:3000', 'http://localhost:3001'],
+    allowedOrigins: [
+      'http://localhost:3000',
+      'http://localhost:3001',
+      'https://stg.vylune.com',
+    ],
     removalPolicy: 'DESTROY',
-  },
-  stg: {
-    env: {
-      account: process.env.CDK_DEFAULT_ACCOUNT,
-      region: process.env.CDK_DEFAULT_REGION || 'eu-central-1',
-    },
-    stackName: 'VyluneStack-Stg',
-    tableName: 'VyluneTable-Stg',
-    userPoolName: 'vylune-users-stg',
-    apiName: 'vylune-api-stg',
-    allowedOrigins: ['https://stg.vylune.com'],
-    removalPolicy: 'RETAIN',
   },
   prd: {
     env: {

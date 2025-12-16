@@ -44,11 +44,6 @@ bun run cdk:synth:dev       # Synthesize CloudFormation template
 bun run cdk:diff:dev        # Show infrastructure changes
 bun run cdk:deploy:dev      # Deploy to dev environment
 
-# Staging environment
-bun run cdk:synth:stg       # Synthesize for staging
-bun run cdk:diff:stg        # Show staging changes
-bun run cdk:deploy:stg      # Deploy to staging
-
 # Production environment
 bun run cdk:synth:prd       # Synthesize for production
 bun run cdk:diff:prd        # Show production changes
@@ -115,21 +110,17 @@ Lambda handler at `services/api/src/utils/lambda.ts` wraps tRPC for API Gateway.
 
 ### Environment Configuration
 
-Three environments configured in `infra/cdk/config/environments.ts`:
+Two environments configured in `infra/cdk/config/environments.ts`:
 
 1. **dev**: Development (eu-central-1)
    - Resources: VyluneTable-Dev, vylune-users-dev, vylune-api-dev
-   - CORS: localhost:3000, localhost:3001
+   - CORS: localhost:3000, localhost:3001, stg.vylune.com
    - Removal policy: DESTROY
+   - Used for: Local development and staging deployments
 
-2. **stg**: Staging (eu-central-1)
-   - Resources: VyluneTable-Stg, vylune-users-stg, vylune-api-stg
-   - CORS: https://stg.vylune.com
-   - Removal policy: RETAIN
-
-3. **prd**: Production (eu-central-1)
+2. **prd**: Production (eu-central-1)
    - Resources: VyluneTable-Prd, vylune-users-prd, vylune-api-prd
-   - CORS: https://vylune.com, https://www.vylune.com
+   - CORS: <https://vylune.com>, <https://www.vylune.com>
    - Removal policy: RETAIN
 
 ### AWS Infrastructure
@@ -189,6 +180,5 @@ Stack outputs (exported for each environment):
 3. Test locally with `bun run dev:web` and/or `bun run dev:api`
 4. Build to ensure everything compiles: `bun run build`
 5. Deploy to dev environment: `bun run cdk:deploy:dev`
-6. Test in dev environment
-7. Promote to staging: `bun run cdk:deploy:stg`
-8. Finally deploy to production: `bun run cdk:deploy:prd`
+6. Test in dev environment (supports both localhost and stg.vylune.com)
+7. Deploy to production: `bun run cdk:deploy:prd`

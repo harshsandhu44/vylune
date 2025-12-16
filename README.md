@@ -54,21 +54,15 @@ bun run format:check     # Check formatting
 
 ## Environments
 
-The infrastructure supports three environments:
+The infrastructure supports two environments:
 
 ### Development (dev)
 
 - **Region**: eu-central-1
 - **Resources**: VyluneTable-Dev, vylune-users-dev, vylune-api-dev
-- **CORS**: localhost:3000, localhost:3001
+- **CORS**: localhost:3000, localhost:3001, stg.vylune.com
 - **Removal Policy**: DESTROY (resources deleted on stack deletion)
-
-### Staging (stg)
-
-- **Region**: eu-central-1
-- **Resources**: VyluneTable-Stg, vylune-users-stg, vylune-api-stg
-- **CORS**: <https://stg.vylune.com>
-- **Removal Policy**: RETAIN (resources preserved on stack deletion)
+- **Purpose**: Local development and staging deployments
 
 ### Production (prd)
 
@@ -76,6 +70,7 @@ The infrastructure supports three environments:
 - **Resources**: VyluneTable-Prd, vylune-users-prd, vylune-api-prd
 - **CORS**: <https://vylune.com>, <https://www.vylune.com>
 - **Removal Policy**: RETAIN (resources preserved on stack deletion)
+- **Purpose**: Production deployments
 
 ## Infrastructure Deployment
 
@@ -83,7 +78,6 @@ The infrastructure supports three environments:
 
 ```bash
 bun run cdk:synth:dev
-bun run cdk:synth:stg
 bun run cdk:synth:prd
 ```
 
@@ -91,7 +85,6 @@ bun run cdk:synth:prd
 
 ```bash
 bun run cdk:deploy:dev
-bun run cdk:deploy:stg
 bun run cdk:deploy:prd
 ```
 
@@ -99,7 +92,6 @@ bun run cdk:deploy:prd
 
 ```bash
 bun run cdk:diff:dev
-bun run cdk:diff:stg
 bun run cdk:diff:prd
 ```
 
@@ -147,9 +139,8 @@ AWS CDK stack with:
 3. Test locally with `bun run dev`
 4. Build: `bun run build`
 5. Deploy to dev: `bun run cdk:deploy:dev`
-6. Test in dev environment
-7. Deploy to staging: `bun run cdk:deploy:stg`
-8. Deploy to production: `bun run cdk:deploy:prd`
+6. Test in dev environment (localhost and staging)
+7. Deploy to production: `bun run cdk:deploy:prd`
 
 ## Configuration
 

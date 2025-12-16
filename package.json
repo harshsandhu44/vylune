@@ -25,15 +25,12 @@
     "clean": "bun run --filter './apps/*' clean && bun run --filter './packages/*' clean && bun run --filter './services/*' clean",
     "cdk:synth": "bun run --filter '@vylune/infra-cdk' synth",
     "cdk:synth:dev": "bun run --filter '@vylune/infra-cdk' synth:dev",
-    "cdk:synth:stg": "bun run --filter '@vylune/infra-cdk' synth:stg",
     "cdk:synth:prd": "bun run --filter '@vylune/infra-cdk' synth:prd",
     "cdk:deploy": "bun run --filter '@vylune/infra-cdk' deploy",
     "cdk:deploy:dev": "bun run --filter '@vylune/infra-cdk' deploy:dev",
-    "cdk:deploy:stg": "bun run --filter '@vylune/infra-cdk' deploy:stg",
     "cdk:deploy:prd": "bun run --filter '@vylune/infra-cdk' deploy:prd",
     "cdk:diff": "bun run --filter '@vylune/infra-cdk' diff",
     "cdk:diff:dev": "bun run --filter '@vylune/infra-cdk' diff:dev",
-    "cdk:diff:stg": "bun run --filter '@vylune/infra-cdk' diff:stg",
     "cdk:diff:prd": "bun run --filter '@vylune/infra-cdk' diff:prd"
   },
   "devDependencies": {
