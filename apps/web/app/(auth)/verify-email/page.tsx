@@ -90,7 +90,7 @@ export default function VerifyEmailPage({
       });
 
       clearPendingSignUp();
-      router.push('/');
+      router.push('/onboarding');
     } catch (err: any) {
       console.error('Verification error:', err);
 
