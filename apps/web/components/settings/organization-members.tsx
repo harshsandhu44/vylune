@@ -11,6 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { Trash2, Mail } from 'lucide-react';
+import type { OrganizationMember } from '@vylune/core/schemas';
 
 export function OrganizationMembersSettings() {
   const { currentOrganization, isLeader } = useOrganizationStore();
@@ -88,8 +89,8 @@ export function OrganizationMembersSettings() {
     );
   }
 
-  const activeMembers = members?.filter((m) => m.status === 'active') || [];
-  const pendingMembers = members?.filter((m) => m.status === 'pending') || [];
+  const activeMembers = members?.filter((m: OrganizationMember & { user?: any }) => m.status === 'active') || [];
+  const pendingMembers = members?.filter((m: OrganizationMember & { user?: any }) => m.status === 'pending') || [];
 
   return (
     <div className="space-y-6">
@@ -134,7 +135,7 @@ export function OrganizationMembersSettings() {
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
-              {pendingMembers.map((member) => (
+              {pendingMembers.map((member: OrganizationMember & { user?: any }) => (
                 <div
                   key={member.userId}
                   className="flex items-center justify-between rounded-lg border p-3"
@@ -163,7 +164,7 @@ export function OrganizationMembersSettings() {
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
-            {activeMembers.map((member) => {
+            {activeMembers.map((member: OrganizationMember & { user?: any }) => {
               const isCurrentUser = member.userId === user?.id;
               const canRemove = isLeader() && !isCurrentUser && member.role !== 'leader';
 

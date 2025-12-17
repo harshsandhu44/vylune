@@ -1,8 +1,10 @@
 import { z } from 'zod';
-import { TRPCError } from '@trpc/server';
-import { t } from '../trpc';
+import { initTRPC, TRPCError } from '@trpc/server';
+import type { Context } from '../context';
 import { requireOrganization, requireLeader } from '../middleware/organization.middleware';
 import type { OrganizationMember } from '@vylune/core/schemas';
+
+const t = initTRPC.context<Context>().create();
 
 export const memberRouter = t.router({
   // Invite member

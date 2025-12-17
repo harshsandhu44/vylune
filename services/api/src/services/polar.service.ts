@@ -59,7 +59,7 @@ export class PolarService {
       throw new Error(`Polar API error: ${error}`);
     }
 
-    const data = await response.json();
+    const data = (await response.json()) as { id: string; url: string };
     return {
       checkoutId: data.id,
       checkoutUrl: data.url,

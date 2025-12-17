@@ -1,9 +1,10 @@
 import { z } from 'zod';
-import { TRPCError } from '@trpc/server';
-import { t } from '../trpc';
+import { initTRPC, TRPCError } from '@trpc/server';
+import type { Context } from '../context';
 import { requireLeader } from '../middleware/organization.middleware';
 import { polarService } from '../services/polar.service';
-import type { Subscription } from '@vylune/core/schemas';
+
+const t = initTRPC.context<Context>().create();
 
 export const subscriptionRouter = t.router({
   // Create checkout session
@@ -153,13 +154,13 @@ export const subscriptionRouter = t.router({
   // Get subscription history
   getHistory: t.procedure
     .input(z.object({ organizationId: z.string().uuid() }))
-    .query(async ({ ctx, input }): Promise<Subscription[]> => {
+    .query(async ({ ctx, input }): Promise<any[]> => {
       await requireLeader(ctx);
 
       const subscriptions = await ctx.models.Subscription.find({
         pk: `ORGANIZATION#${input.organizationId}`,
       });
 
-      return subscriptions as Subscription[];
+      return subscriptions as any[];
     }),
 });

@@ -3,7 +3,7 @@
 import { createContext, useContext, useEffect, type ReactNode } from 'react';
 import { useOrganizationStore } from '@/stores/organization.store';
 import { useAuthStore } from '@/stores/auth.store';
-import { trpc } from '@/lib/api';
+import { trpc } from '@/lib/trpc';
 
 interface OrganizationContextValue {
   isLoading: boolean;
