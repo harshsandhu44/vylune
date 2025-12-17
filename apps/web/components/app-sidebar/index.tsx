@@ -14,6 +14,7 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { NavUser } from './nav-user';
+import { OrganizationSwitcher } from '@/components/organization-switcher';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const path = usePathname();
@@ -41,6 +42,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
+        <div className="px-2 py-2">
+          <OrganizationSwitcher />
+        </div>
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={navMain} />
