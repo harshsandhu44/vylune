@@ -41,6 +41,7 @@ export class ApiGatewayConstruct extends Construct {
         allowHeaders: [
           'Content-Type',
           'Authorization',
+          'x-organization-id',
           'sec-ch-ua',
           'sec-ch-ua-mobile',
           'sec-ch-ua-platform',
@@ -54,6 +55,7 @@ export class ApiGatewayConstruct extends Construct {
         ],
         allowOrigins: props.allowedOrigins,
         allowCredentials: true,
+        exposeHeaders: ['x-organization-id'],
       },
     });
 
