@@ -1,3 +1,4 @@
+import * as iam from 'aws-cdk-lib/aws-iam';
 import * as cdk from 'aws-cdk-lib';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
@@ -43,9 +44,17 @@ export class LambdaConstruct extends Construct {
       environment: {
         TABLE_NAME: props.table.tableName,
         NODE_ENV: 'production',
+        SENDER_EMAIL: 'noreply@vylune.com', // Add your sender email here
       },
     });
 
     props.table.grantReadWriteData(this.apiHandler);
+
+    this.apiHandler.addToRolePolicy(
+      new iam.PolicyStatement({
+        actions: ['ses:SendEmail'],
+        resources: ['*'],
+      })
+    );
   }
 }

@@ -7,6 +7,7 @@ import {
   OrganizationMemberModel,
   SubscriptionModel,
   PolarWebhookEventModel,
+  OrganizationInvitationModel,
 } from './db/client';
 import type { APIGatewayProxyEventV2 } from 'aws-lambda';
 
@@ -20,6 +21,7 @@ export interface Context {
     OrganizationMember: typeof OrganizationMemberModel;
     Subscription: typeof SubscriptionModel;
     PolarWebhookEvent: typeof PolarWebhookEventModel;
+    OrganizationInvitation: typeof OrganizationInvitationModel;
   };
   userId?: string;
   userRole?: string;
@@ -45,6 +47,7 @@ export const createContext = async (event?: APIGatewayProxyEventV2): Promise<Con
       OrganizationMember: OrganizationMemberModel,
       Subscription: SubscriptionModel,
       PolarWebhookEvent: PolarWebhookEventModel,
+      OrganizationInvitation: OrganizationInvitationModel,
     },
     userId,
     userRole,

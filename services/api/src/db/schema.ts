@@ -93,6 +93,17 @@ export const OneTableSchema = {
       gs1pk: { type: String, value: 'USER#${userId}' },
       gs1sk: { type: String, value: 'ORGANIZATION#${organizationId}' },
     },
+    OrganizationInvitation: {
+      pk: { type: String, value: 'INVITATION#${token}' },
+      sk: { type: String, value: 'INVITATION' },
+      token: { type: String, required: true },
+      organizationId: { type: String, required: true },
+      email: { type: String, required: true },
+      role: { type: String, required: true, enum: ['leader', 'member', 'pending'] },
+      expiresAt: { type: Number, required: true, ttl: true },
+      gs1pk: { type: String, value: 'ORGANIZATION#${organizationId}#INVITATIONS' },
+      gs1sk: { type: String, value: 'INVITATION#${email}' },
+    },
     Subscription: {
       pk: { type: String, value: 'ORGANIZATION#${organizationId}' },
       sk: { type: String, value: 'SUBSCRIPTION#${createdAt}#${id}' },

@@ -22,3 +22,4 @@ export const OrganizationModel = table.getModel('Organization') as any; // eslin
 export const OrganizationMemberModel = table.getModel('OrganizationMember') as any; // eslint-disable-line @typescript-eslint/no-explicit-any
 export const SubscriptionModel = table.getModel('Subscription') as any; // eslint-disable-line @typescript-eslint/no-explicit-any
 export const PolarWebhookEventModel = table.getModel('PolarWebhookEvent') as any; // eslint-disable-line @typescript-eslint/no-explicit-any
+export const OrganizationInvitationModel = table.getModel('OrganizationInvitation') as any; // eslint-disable-line @typescript-eslint/no-explicit-any

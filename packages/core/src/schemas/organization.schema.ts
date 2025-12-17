@@ -52,6 +52,14 @@ export const CreateOrganizationMemberSchema = OrganizationMemberSchema.omit({
   updatedAt: true,
 });
 
+export const OrganizationInvitationSchema = z.object({
+  organizationId: z.string().uuid(),
+  email: z.string().email(),
+  role: OrganizationRoleSchema,
+  token: z.string(),
+  expiresAt: z.number(),
+});
+
 export const SubscriptionSchema = z.object({
   id: z.string().uuid(),
   organizationId: z.string().uuid(),
@@ -83,5 +91,6 @@ export type Organization = z.infer<typeof OrganizationSchema>;
 export type CreateOrganization = z.infer<typeof CreateOrganizationSchema>;
 export type OrganizationMember = z.infer<typeof OrganizationMemberSchema>;
 export type CreateOrganizationMember = z.infer<typeof CreateOrganizationMemberSchema>;
+export type OrganizationInvitation = z.infer<typeof OrganizationInvitationSchema>;
 export type Subscription = z.infer<typeof SubscriptionSchema>;
 export type CreateSubscription = z.infer<typeof CreateSubscriptionSchema>;

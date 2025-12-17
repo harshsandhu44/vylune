@@ -1,7 +1,9 @@
 import { z } from 'zod';
 import { initTRPC, TRPCError } from '@trpc/server';
+import crypto from 'crypto';
 import type { Context } from '../context';
 import { requireOrganization, requireLeader } from '../middleware/organization.middleware';
+import { sendEmail } from '../utils/email';
 import type { OrganizationMember } from '@vylune/core/schemas';
 
 const t = initTRPC.context<Context>().create();
@@ -40,50 +42,31 @@ export const memberRouter = t.router({
         });
       }
 
-      // Find user by email
-      const users = await ctx.models.User.find({ gs1pk: 'USERS' }, { index: 'gs1' });
-      const user = users.find((u: any) => u.email === input.email);
-
-      if (!user) {
-        throw new TRPCError({
-          code: 'NOT_FOUND',
-          message: 'User not found. The user must sign up first.',
-        });
-      }
-
-      // Check if user is already a member
-      const existingMembership = await ctx.models.OrganizationMember.get({
-        organizationId: input.organizationId,
-        userId: user.id,
-      });
-
-      if (existingMembership) {
-        if (existingMembership.status === 'active') {
-          throw new TRPCError({
-            code: 'BAD_REQUEST',
-            message: 'User is already a member of this organization',
-          });
-        }
-        if (existingMembership.status === 'pending') {
-          throw new TRPCError({
-            code: 'BAD_REQUEST',
-            message: 'User already has a pending invitation',
-          });
-        }
-      }
-
       // Create invitation
       const now = Date.now();
-      await ctx.models.OrganizationMember.create({
+      const expiresAt = now + 24 * 60 * 60 * 1000; // 24 hours
+      const token = crypto.randomBytes(32).toString('hex');
+
+      await ctx.models.OrganizationInvitation.create({
         organizationId: input.organizationId,
-        userId: user.id,
+        email: input.email,
         role: input.role,
-        status: 'pending',
-        createdAt: now,
-        updatedAt: now,
+        token,
+        expiresAt,
       });
 
-      // TODO: Send email invitation
+      const invitationLink = `http://localhost:3000/sign-up/${token}`;
+      const emailHtml = `
+        <h1>You have been invited to join ${organization.name}</h1>
+        <p>Click the link below to accept the invitation:</p>
+        <a href="${invitationLink}">${invitationLink}</a>
+      `;
+
+      await sendEmail({
+        to: input.email,
+        subject: `Invitation to join ${organization.name}`,
+        html: emailHtml,
+      });
 
       return { message: 'Invitation sent successfully' };
     }),
@@ -225,6 +208,21 @@ export const memberRouter = t.router({
       });
 
       return { success: true };
+    }),
+
+  getInvitationByToken: t.procedure
+    .input(z.string())
+    .query(async ({ ctx, input: token }) => {
+      const invitation = await ctx.models.OrganizationInvitation.get({ token });
+
+      if (!invitation || invitation.expiresAt < Date.now()) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Invitation not found or has expired',
+        });
+      }
+
+      return invitation;
     }),
 
   // List members

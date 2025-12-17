@@ -32,11 +32,43 @@ export const userRouter = t.router({
 
   create: t.procedure
     .input(
-      CreateUserSchema.merge(z.object({ organizationName: z.string().min(2).max(255).optional() }))
+      CreateUserSchema.merge(
+        z.object({
+          organizationName: z.string().min(2).max(255).optional(),
+          token: z.string().optional(),
+        })
+      )
     )
     .mutation(async ({ ctx, input }): Promise<User> => {
-      const now = Date.now(); // Get numeric timestamp
-      const { organizationName, ...userData } = input;
+      const now = Date.now();
+      const { organizationName, token, ...userData } = input;
+
+      if (token) {
+        const invitation = await ctx.models.OrganizationInvitation.get({ token });
+        if (invitation && invitation.expiresAt > now) {
+          const user = await ctx.models.User.create({
+            ...userData,
+            email: invitation.email, // Use email from invitation
+            createdAt: now,
+            updatedAt: now,
+          });
+
+          await ctx.models.OrganizationMember.create({
+            organizationId: invitation.organizationId,
+            userId: user.id,
+            role: invitation.role,
+            status: 'active',
+            createdAt: now,
+            updatedAt: now,
+          });
+
+          await ctx.models.OrganizationInvitation.remove({ token });
+
+          return user as User;
+        }
+      }
+
+      // Fallback to original flow if no token or invitation is invalid
       const user = await ctx.models.User.create({
         ...userData,
         createdAt: now,
