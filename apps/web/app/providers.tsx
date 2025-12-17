@@ -6,6 +6,7 @@ import { trpc } from '@/lib/trpc';
 import { trpcConfig } from '@/lib/api';
 import { useTokenRefresh } from '@/hooks/use-token-refresh';
 import { configureAmplify } from '@/lib/amplify';
+import { OrganizationProvider } from '@/providers/organization-provider';
 
 function AuthProvider({ children }: { children: React.ReactNode }) {
   useTokenRefresh();
@@ -32,7 +33,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          <OrganizationProvider>{children}</OrganizationProvider>
+        </AuthProvider>
       </QueryClientProvider>
     </trpc.Provider>
   );
